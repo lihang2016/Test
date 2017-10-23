@@ -1,10 +1,9 @@
 package com.example.member.domain.entity;
 
 import com.example.domain.entity.AggEntity;
+import com.example.member.domain.enums.Sex;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -18,6 +17,9 @@ public class Member extends AggEntity {
     @Column(name="member_name",columnDefinition = "varchar(40) comment '会员名称'")
     private String memberName;
 
+    @Column(name="sex",columnDefinition = "varchar(40) comment '性别'")
+    @Enumerated(EnumType.STRING)
+    private Sex sex;
 
     @Column(name="id_card",columnDefinition = "varchar(20) comment '身份证号'")
     private String idCard;
@@ -40,6 +42,14 @@ public class Member extends AggEntity {
     @Column(name="member_type",columnDefinition = "varchar(15) comment '会员类型'")
     private String memberType;
 
+
+    public Sex getSex() {
+        return sex;
+    }
+
+    public void setSex(Sex sex) {
+        this.sex = sex;
+    }
 
     public String getMemberType() {
         return memberType;

@@ -5,5 +5,18 @@ package com.example.member.domain.enums;
  * @Description
  * @Date 2017/10/22 11:07
  */
-public class Sex {
+public enum Sex {
+    MAN("男","MAN"),
+    WOMAN("女","WOMAN");
+
+    private String msg;
+
+    private String code;
+
+    Sex(String message,String code){
+        this.msg=message;
+        this.code=code;
+    }
+
+
 }

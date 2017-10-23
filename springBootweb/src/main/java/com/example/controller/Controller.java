@@ -38,4 +38,11 @@ public class Controller {
         return ViewInfo.from(personAppService.queryListPersonTwo(pageDto));
     }
 
+
+    public static void main(String[] args) {
+        String guyue="古月";
+        if(1==1){
+            System.out.println(guyue+"傻逼");
+        }
+    }
 }

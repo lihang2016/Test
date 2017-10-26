@@ -10,6 +10,8 @@ import com.example.util.DomainService;
 import com.example.util.event.EventBus;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
+
 /**
  * 会员领域服务
  * Created by 96230 on 2017/6/10.
@@ -44,9 +46,10 @@ public class MemberDomainService {
     }
 
     public Member findById(Long id){
-        Member member=mybatisMapperRepository.selectByPrimaryKey(1L);
+       // Member member=mybatisMapperRepository.selectByPrimaryKey(1L);
+       // mybatisMapperRepository.instartList();
         System.out.println("aaaaa");
-        return member;
+        return null;
     }
 
 }

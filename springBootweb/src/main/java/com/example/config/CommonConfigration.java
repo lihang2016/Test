@@ -105,10 +105,6 @@ public class CommonConfigration {
     }
 
     @Bean
-    public PageableExecutorInterceptor pageableExecutorInterceptor() {
-        return new PageableExecutorInterceptor();
-    }
-    @Bean
     public StringToUDCConverter stringToUDCConverter() {
         return new StringToUDCConverter();
     }

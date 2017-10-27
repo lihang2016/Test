@@ -64,7 +64,8 @@ public class PageableExecutorInterceptor implements Interceptor {
             }
         } else {
             //动态拼装sql分页
-            String pageSql = getPageSql(mappedStatement, pageInfo, originalSql);
+            String pageSql = "SELECT id,raw_add_time,raw_update_time,member_name,sex,id_card,phone,birthday,address,company_name,pass_word,member_type  FROM member  WHERE  member_name  like '%小白%'  order by  id desc limit 1,1";
+
             BoundSql newBoundSql = copyFromBoundSql(mappedStatement, boundSql, pageSql);
             MappedStatement newMapperStmt = copyFromMappedStatement(mappedStatement, newBoundSql);
             invocation.getArgs()[0] = newMapperStmt;

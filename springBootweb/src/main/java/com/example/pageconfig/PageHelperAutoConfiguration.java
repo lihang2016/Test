@@ -24,6 +24,7 @@
 
 package com.example.pageconfig;
 
+import com.example.mybatisMapper.pages.OptimisticLocker;
 import com.example.mybatisMapper.pages.PageableExecutorInterceptor;
 //import com.github.pagehelper.PageInterceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -63,8 +64,10 @@ public class PageHelperAutoConfiguration implements EnvironmentAware {
     @PostConstruct
     public void addPageInterceptor() {
         PageableExecutorInterceptor interceptor = new PageableExecutorInterceptor();
+        OptimisticLocker optimisticLocker=new OptimisticLocker();
         for (SqlSessionFactory sqlSessionFactory : sqlSessionFactoryList) {
             sqlSessionFactory.getConfiguration().addInterceptor(interceptor);
+            sqlSessionFactory.getConfiguration().addInterceptor(optimisticLocker);
         }
     }
 

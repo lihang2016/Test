@@ -9,6 +9,7 @@ import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.example.common.udc.StringToUDCConverter;
 import com.example.common.udc.UDC;
 import com.example.common.udc.UDCDeserializer;
+import com.example.mybatisMapper.pages.PageableExecutorInterceptor;
 import com.example.util.event.EventBus;
 import com.example.util.event.EventHandler;
 import com.google.common.base.Splitter;
@@ -103,6 +104,10 @@ public class CommonConfigration {
         return contextWrappedExecutorService;
     }
 
+    @Bean
+    public PageableExecutorInterceptor pageableExecutorInterceptor() {
+        return new PageableExecutorInterceptor();
+    }
     @Bean
     public StringToUDCConverter stringToUDCConverter() {
         return new StringToUDCConverter();

@@ -29,6 +29,7 @@ public class MemberAppService {
     }
 
     public SingleResponse<MemberDto> findById(Long id){
-        return SingleResponse.from(memberDomainService.findById(id).to(MemberDto.class));
+        memberDomainService.findById(id);
+        return null;
     }
 }

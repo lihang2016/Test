@@ -1,6 +1,7 @@
 package com.example.mpper;
 
 import com.example.domain.entity.AggEntity;
+import com.example.mybatisMapper.FindMapper;
 import com.example.mybatisMapper.InsterListMapper;
 import tk.mybatis.mapper.common.Mapper;
 
@@ -9,5 +10,5 @@ import tk.mybatis.mapper.common.Mapper;
  * @Description:mybatis 通用mapper
  * @Date 2017/10/21 13:33
  */
-public interface BaseMapper<T extends AggEntity> extends Mapper<T>,InsterListMapper<T> {
+public interface BaseMapper<T extends AggEntity> extends FindMapper<T> {
 }

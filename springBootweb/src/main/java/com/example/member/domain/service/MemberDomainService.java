@@ -8,9 +8,16 @@ import com.example.member.domain.repository.MemberRepository;
 import com.example.member.domain.repository.MybatisMapperRepository;
 import com.example.util.DomainService;
 import com.example.util.event.EventBus;
+import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
-import java.util.ArrayList;
+import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 会员领域服务
@@ -45,11 +52,16 @@ public class MemberDomainService {
         return member;
     }
 
-    public Member findById(Long id){
+    public Page<Member> findById(Long id){
        // Member member=mybatisMapperRepository.selectByPrimaryKey(1L);
        // mybatisMapperRepository.instartList();
+        Map<String,Object> map= Maps.newHashMap();
+        map.put("LIKE_memberName","小白");
+        Pageable pageable=new PageRequest(1,1);
+        Page<Member> member=mybatisMapperRepository.findAllPage(map,pageable);
+//        List<Member> member=mybatisMapperRepository.find("LIKE_memberName","小白");
         System.out.println("aaaaa");
-        return null;
+        return member;
     }
 
 }

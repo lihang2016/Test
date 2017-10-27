@@ -115,6 +115,12 @@
 			<artifactId>mapper-spring-boot-starter</artifactId>
 			<version>1.1.4</version>
 		</dependency>
+		<!--mybatis 分页插件-->
+		<!--<dependency>-->
+			<!--<groupId>com.github.pagehelper</groupId>-->
+			<!--<artifactId>pagehelper-spring-boot-starter</artifactId>-->
+			<!--<version>1.2.1</version>-->
+		<!--</dependency>-->
 		<!--&lt;!&ndash;扫描类&ndash;&gt;-->
 		<!--<dependency>-->
 			<!--<groupId>cn.fh</groupId>-->

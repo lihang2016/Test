@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
  */
 @Setter
 @Getter
-public class PersonDto{
+public class PersonDto extends PageDto{
 
     @NotNull
     private String name;

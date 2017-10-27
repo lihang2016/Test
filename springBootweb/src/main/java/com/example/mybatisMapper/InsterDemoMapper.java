@@ -8,6 +8,9 @@ import tk.mybatis.mapper.mapperhelper.EntityHelper;
 import tk.mybatis.mapper.mapperhelper.MapperHelper;
 import tk.mybatis.mapper.mapperhelper.MapperTemplate;
 import tk.mybatis.mapper.mapperhelper.SqlHelper;
+import tk.mybatis.mapper.provider.SpecialProvider;
+
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -25,7 +28,6 @@ public class InsterDemoMapper extends MapperTemplate {
         final Class<?> entityClass = getEntityClass(ms);
         //将返回值修改为实体类型
         setResultType(ms, entityClass);
-
         StringBuilder sql = new StringBuilder();
         sql.append(SqlHelper.selectAllColumns(entityClass));
         sql.append(SqlHelper.fromTable(entityClass, tableName(entityClass)));
@@ -36,7 +38,7 @@ public class InsterDemoMapper extends MapperTemplate {
         }
         System.out.println(sql.toString());
         System.out.println("进来了");
-        return null;
+        return sql.toString();
     }
 
 }

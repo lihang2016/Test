@@ -1,5 +1,7 @@
 package com.example.controller;
 
+import com.example.dto.NULL;
+import com.example.dto.PageRequest;
 import com.example.dto.ViewInfo;
 import com.example.member.app.dto.LoginDto;
 import com.example.member.app.service.MemberAppService;
@@ -36,8 +38,8 @@ public class MemberController {
         return new ViewInfo();
     }
     @RequestMapping(value = "/testMybatis",method = RequestMethod.GET)
-    public ViewInfo queryPersonTwo(){
-        return ViewInfo.from(memberAppService.findById(1L));
+    public ViewInfo queryPersonTwo(PageRequest<NULL> s){
+         return ViewInfo.from(memberAppService.findById(s));
     }
 
     @RequestMapping(value = "/front/testfront.json")

@@ -1,13 +1,16 @@
 package com.example.member.app.service;
 
+import com.example.dto.NULL;
+import com.example.dto.PageRequest;
 import com.example.dto.SingleResponse;
 import com.example.member.app.dto.LoginDto;
 import com.example.member.app.dto.MemberDto;
 import com.example.member.domain.service.MemberDomainService;
 import com.example.util.AppService;
+import com.example.util.Pages;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
-
 
 /**
  * Created by 96230 on 2017/6/10.
@@ -28,8 +31,7 @@ public class MemberAppService {
         return SingleResponse.from(memberDomainService.findByPhoneAndPassword(loginDto).to(MemberDto.class));
     }
 
-    public SingleResponse<MemberDto> findById(Long id){
-        memberDomainService.findById(id);
-        return null;
+    public SingleResponse<Page<MemberDto>> findById(PageRequest<NULL> pageRequest){
+        return SingleResponse.from(Pages.map(memberDomainService.findById(pageRequest), MemberDto.class));
     }
 }

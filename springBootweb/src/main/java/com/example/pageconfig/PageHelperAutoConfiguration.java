@@ -24,24 +24,20 @@
 
 package com.example.pageconfig;
 
-import com.example.mybatisMapper.pages.OptimisticLocker;
+import com.example.mybatisMapper.pages.PageObjectFactory;
+import com.example.mybatisMapper.pages.PageObjectWrapperFactory;
 import com.example.mybatisMapper.pages.PageableExecutorInterceptor;
-//import com.github.pagehelper.PageInterceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.bind.RelaxedPropertyResolver;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+
+//import com.github.pagehelper.PageInterceptor;
 
 /**
  * 自定注入分页插件
@@ -64,10 +60,13 @@ public class PageHelperAutoConfiguration implements EnvironmentAware {
     @PostConstruct
     public void addPageInterceptor() {
         PageableExecutorInterceptor interceptor = new PageableExecutorInterceptor();
-        OptimisticLocker optimisticLocker=new OptimisticLocker();
+//        OptimisticLocker optimisticLocker=new OptimisticLocker();
         for (SqlSessionFactory sqlSessionFactory : sqlSessionFactoryList) {
             sqlSessionFactory.getConfiguration().addInterceptor(interceptor);
-            sqlSessionFactory.getConfiguration().addInterceptor(optimisticLocker);
+            sqlSessionFactory.getConfiguration().setObjectFactory(new PageObjectFactory());
+            sqlSessionFactory.getConfiguration().setObjectWrapperFactory(new PageObjectWrapperFactory());
+            sqlSessionFactory.getConfiguration().setUseGeneratedKeys(true);
+//            sqlSessionFactory.getConfiguration().addInterceptor(optimisticLocker);
         }
     }
 

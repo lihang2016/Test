@@ -36,7 +36,7 @@ public class CommonExceptionAdvice {
     @ExceptionHandler(RuntimeException.class)
     public ViewInfo runtimeException(RuntimeException e) {
         logger.error("业务逻辑异常", e);
-        return ViewInfo.from(new SingleResponse().failure("内部错误",500));
+        return ViewInfo.from(new SingleResponse().failure("属性[aaa]不存在",500));
     }
 
     /**

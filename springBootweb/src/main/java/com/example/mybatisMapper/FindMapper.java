@@ -1,6 +1,7 @@
 
 package com.example.mybatisMapper;
 
+import com.example.exception.CPBusinessException;
 import com.google.common.collect.Maps;
 import org.apache.ibatis.annotations.SelectProvider;
 import org.apache.ibatis.binding.MapperMethod;
@@ -29,7 +30,7 @@ public interface FindMapper<T> {
 	T findOne(String property, Object value);
 
 	@SelectProvider(type = FindProvider.class, method = "dynamicSQL")
-    Page<T> findAllPage(Map<String, Object> map, Pageable pageable);
+	Page<T> findAllPage(Map<String, Object> map, Pageable pageable);
 
 	class FindProvider extends MapperTemplate {
 		
@@ -111,7 +112,10 @@ public interface FindMapper<T> {
 						continue;
 					}
 					Class proType = fieldsTypes.get(searchFilter.fieldName);
-					Assert.notNull(proType, "属性[" + searchFilter.fieldName + "]不存在");
+//					Assert.notNull(proType, "属性[" + searchFilter.fieldName + "]不存在");
+					if(proType==null){
+						CPBusinessException.throwIt("属性["+searchFilter.fieldName+"]不存在",500);
+					}
 					sqlResult.append(SearchFilterParser.parseSqlField(searchFilter, proType));
 					sqlResult.append(" AND ");
 				}

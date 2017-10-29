@@ -9,6 +9,10 @@ import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.example.common.udc.StringToUDCConverter;
 import com.example.common.udc.UDC;
 import com.example.common.udc.UDCDeserializer;
+import com.example.mybatisMapper.pages.PageObjectFactory;
+import com.example.mybatisMapper.pages.PageObjectWrapperFactory;
+import com.example.mybatisMapper.pages.PageableExecutorInterceptor;
+import com.example.springMvc.PageResquestConverter;
 import com.example.util.event.EventBus;
 import com.example.util.event.EventHandler;
 import com.google.common.base.Splitter;
@@ -16,7 +20,9 @@ import net.engio.mbassy.bus.config.BusConfiguration;
 import net.engio.mbassy.bus.config.Feature;
 import net.engio.mbassy.bus.config.IBusConfiguration;
 import net.engio.mbassy.bus.error.IPublicationErrorHandler;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
@@ -30,6 +36,7 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import javax.annotation.PostConstruct;
+import java.util.List;
 
 /**
  *配置事件类
@@ -37,6 +44,10 @@ import javax.annotation.PostConstruct;
  */
 @Configuration
 public class CommonConfigration {
+
+    @Autowired
+    private List<SqlSessionFactory> sqlSessionFactoryList;
+
     @Bean
     public static BeanDefinitionRegistryPostProcessor cpValidatorBeanDefinitionRegistryPostProcessor() {
         return new BeanDefinitionRegistryPostProcessor() {
@@ -108,6 +119,21 @@ public class CommonConfigration {
         return new StringToUDCConverter();
     }
 
+    /**
+     * 自定义分页插件配置
+     */
+    @PostConstruct
+    public void addPageInterceptor() {
+        PageableExecutorInterceptor interceptor = new PageableExecutorInterceptor();
+//        OptimisticLocker optimisticLocker=new OptimisticLocker();
+        for (SqlSessionFactory sqlSessionFactory : sqlSessionFactoryList) {
+            sqlSessionFactory.getConfiguration().addInterceptor(interceptor);
+            sqlSessionFactory.getConfiguration().setObjectFactory(new PageObjectFactory());
+            sqlSessionFactory.getConfiguration().setObjectWrapperFactory(new PageObjectWrapperFactory());
+            sqlSessionFactory.getConfiguration().setUseGeneratedKeys(true);
+//            sqlSessionFactory.getConfiguration().addInterceptor(optimisticLocker);
+        }
+    }
     @Bean
     public DateConverter dateConverter() {
         return new DateConverter();

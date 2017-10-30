@@ -17,7 +17,11 @@ import com.example.scaneum.dto.FieldInfoDto;
 
 import java.util.List;
 import java.util.Set;
-
+/**
+ * @Author:lihang
+ * @Description:枚举扫描类
+ * @Date Create in 16:21 2017/10/30
+ */
 public interface MetaDataService {
      /**
      * 获取单个实体元数据信息
@@ -45,7 +49,7 @@ public interface MetaDataService {
      * @param classSimpleName 例： CustomerType
      * @return
      */
-    List<Enum> getByEnumClassSimpleName(String classSimpleName);
+    String getByEnumClassSimpleName(String classSimpleName);
     
     /**
      * 根据多个枚举类名,获取枚举的所有实例

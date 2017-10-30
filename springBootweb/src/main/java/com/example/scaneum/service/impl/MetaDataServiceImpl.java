@@ -1,5 +1,11 @@
 package com.example.scaneum.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializeConfig;
+import com.example.common.udc.domain.entity.UDCType;
+import com.example.member.domain.enums.Sex;
+import com.example.mybatisMapper.SearchFilter;
+import com.example.mybatisMapper.pages.data.DatabaseType;
 import com.example.scaneum.dto.EntityInfoDto;
 import com.example.scaneum.dto.EnumDto;
 import com.example.scaneum.dto.EnumListDto;
@@ -28,6 +34,7 @@ import javax.persistence.Entity;
 import javax.persistence.PersistenceException;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
@@ -35,7 +42,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @Author:lihang
- * @Description:
+ * @Description:枚举扫描类
  * @Date Create in 16:21 2017/10/30
  */
 @Service
@@ -46,12 +53,11 @@ public class MetaDataServiceImpl implements MetaDataService {
     /**
      * 枚举实例缓存
      */
-    private Map<String, List<Enum>> enumInstanceMap = new ConcurrentHashMap<>();
+    private Map<String, String> enumInstanceMap = new ConcurrentHashMap<>();
     /**
      * 工作流实体元数据缓存
      */
-    private Map<String, List<EntityInfoDto>> flowEntityMap=new ConcurrentHashMap<>();
-
+    private Map<String, List<EntityInfoDto>> flowEntityMap = new ConcurrentHashMap<>();
 
 
     private ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
@@ -65,11 +71,9 @@ public class MetaDataServiceImpl implements MetaDataService {
         enumTypeFilters.add(new AssignableTypeFilter(Enum.class));
     }
 
-//
-//@Autowired
-//    private JPAProperties jpaProperties;
     /**
      * 获取单个实体元数据信息
+     *
      * @param className 类全路径
      * @return 实体字段的元数据信息
      */
@@ -91,13 +95,13 @@ public class MetaDataServiceImpl implements MetaDataService {
      * 通过反射获取实体元数据信息
      *
      * @param classList 传入格式 :  [com.zds.boot.City.class,com.zds.boot.Customer.class]
-     * @return   以Class为key,Class字段元数据信息为list的map
+     * @return 以Class为key, Class字段元数据信息为list的map
      */
     public Map<Class, List<FieldInfoDto>> getEntityMetaDataByClass(List<Class> classList) {
         checkIsEntity(classList);
         Map<Class, List<FieldInfoDto>> classListMap = new HashMap<>();
         for (Class aClass : classList) {
-            List<FieldInfoDto> fieldInfoDtoList =  new ArrayList<>();
+            List<FieldInfoDto> fieldInfoDtoList = new ArrayList<>();
             Set<Field> fieldSet = Reflections.getFields(aClass);
             for (Field field : fieldSet) {
                 FieldInfoDto fieldInfoDto = new FieldInfoDto();
@@ -152,13 +156,12 @@ public class MetaDataServiceImpl implements MetaDataService {
     /**
      * 扫描所有带@Flow注解的实体,并获取实体元数据信息
      * <p>
-     *  以实体@Flow注解上标明的模块名为key,实体元数据为list的map
+     * 以实体@Flow注解上标明的模块名为key,实体元数据为list的map
      * </p>
-     *
      */
     public void scanFlowEntity() {
-        if(flowEntityMap==null||flowEntityMap.isEmpty()){
-            flowEntityMap=new HashMap<>();
+        if (flowEntityMap == null || flowEntityMap.isEmpty()) {
+            flowEntityMap = new HashMap<>();
             String packagesToScan[] = {"com.example.**.entity"};
             if (packagesToScan != null && packagesToScan.length > 0) {
                 for (String pkg : packagesToScan) {
@@ -204,19 +207,20 @@ public class MetaDataServiceImpl implements MetaDataService {
      * @return
      */
     @Override
-    public List<Enum> getByEnumClassSimpleName(String classSimpleName) {
+    public String getByEnumClassSimpleName(String classSimpleName) {
         return enumInstanceMap.get(classSimpleName);
     }
 
     /**
      * 根据多个枚举类名,获取枚举的所有实例
+     *
      * @param simpleNameList
-     * @return  EnumDto集合
+     * @return EnumDto集合
      */
-    public List<EnumListDto> getByEnumClassSimpleName(List<String> simpleNameList){
-        List<EnumListDto> enumListDtoList =new ArrayList<>();
-        simpleNameList.forEach(simpleName->{
-            EnumListDto enumListDto =new EnumListDto();
+    public List<EnumListDto> getByEnumClassSimpleName(List<String> simpleNameList) {
+        List<EnumListDto> enumListDtoList = new ArrayList<>();
+        simpleNameList.forEach(simpleName -> {
+            EnumListDto enumListDto = new EnumListDto();
             enumListDto.setSimpleName(simpleName);
             enumListDto.setEnumsList(enumInstanceMap.get(simpleName));
             enumListDtoList.add(enumListDto);
@@ -227,14 +231,14 @@ public class MetaDataServiceImpl implements MetaDataService {
     /**
      * 扫描类修饰符为public的枚举类
      * <p>
-     *  枚举类名为key,枚举实例为list的map
+     * 枚举类名为key,枚举实例为list的map
      * </p>
      */
     @Override
     public void scanAllEnum() {
         if (enumInstanceMap == null || enumInstanceMap.isEmpty()) {
-            enumInstanceMap=new HashMap<>();
-            List<String> packageList= Lists.newArrayList("com.example");
+            enumInstanceMap = new HashMap<>();
+            List<String> packageList = Lists.newArrayList("com.example");
 //            if(!Apps.getBasePackage().contains(Apps.COMPONENTS_PACKAGE)){
 //                packageList.add(Apps.getBasePackage());
 //            }
@@ -249,17 +253,18 @@ public class MetaDataServiceImpl implements MetaDataService {
                                 Class aClass = Class.forName(className);
                                 //排除private的枚举
                                 if (Modifier.isPublic(aClass.getModifiers())) {
-                                    Method method = aClass.getMethod("values");
-                                    Enum inter[] = (Enum[]) method.invoke(null, null);
-                                    List<Enum> enumList = new ArrayList<>();
-                                    for (Enum enumMessage : inter) {
-                                        System.out.println(enumMessage.toString());
-                                        enumList.add(enumMessage);
+//                                    Method method = aClass.getMethod("values");
+//                                    Enum inter[] = (Enum[]) method.invoke(null, null);
+//                                    List<Enum> enumList = new ArrayList<>();
+//                                    for (Enum enumMessage : inter) {
+//                                        enumList.add(enumMessage);
+//                                    }
+                                    if (filterEnum(aClass)) {
+                                        if (enumInstanceMap.containsKey(aClass.getSimpleName())) {
+                                            throw Exceptions.runtimeException("存在类名相同的枚举,请修改:" + aClass.getSimpleName());
+                                        }
+                                        enumInstanceMap.put(aClass.getSimpleName(), toJson(aClass));
                                     }
-                                    if(enumInstanceMap.containsKey(aClass.getSimpleName())){
-                                        throw Exceptions.runtimeException("存在类名相同的枚举,请修改:"+aClass.getSimpleName());
-                                    }
-                                    enumInstanceMap.put(aClass.getSimpleName(), enumList);
                                 }
                             }
                         }
@@ -270,6 +275,43 @@ public class MetaDataServiceImpl implements MetaDataService {
             }
             log.info("扫描枚举结束");
         }
+    }
+
+    private static Boolean filterEnum(Class<? extends Enum> enumClass) {
+        if (enumClass == SearchFilter.Operator.class) {
+            return false;
+        } else if (enumClass == UDCType.Category.class) {
+            return false;
+        } else if (enumClass == DatabaseType.class) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private static String toJson(Class<? extends Enum> enumClass) {
+        Method methodValues = null;
+        try {
+            methodValues = enumClass.getMethod("values");
+            Object invoke = methodValues.invoke(null);
+
+            int length = java.lang.reflect.Array.getLength(invoke);
+            List<Object> values = new ArrayList<Object>();
+            for (int i = 0; i < length; i++) {
+                values.add(java.lang.reflect.Array.get(invoke, i));
+            }
+
+            SerializeConfig config = new SerializeConfig();
+            config.configEnumAsJavaBean(enumClass);
+            return JSON.toJSONString(values, config);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**
@@ -288,6 +330,7 @@ public class MetaDataServiceImpl implements MetaDataService {
 
     /**
      * 解析资源路径
+     *
      * @param pkg 指定包名
      * @return
      */

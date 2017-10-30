@@ -80,6 +80,7 @@ public class CommonConfigration {
         HttpMessageConverter<?> converter = fastConverter;
         return new HttpMessageConverters(converter);
     }
+
     @Bean
     public static BeanPostProcessor cpAppServiceBeanCheckerPostProcessor() {
         return new CPAppServiceBeanCheckerPostProcessor();

@@ -1,9 +1,14 @@
 package com.example.dto;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializeConfig;
 import com.example.util.Pages;
 import org.springframework.data.domain.PageImpl;
 
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -83,6 +88,15 @@ public class ViewInfo implements Serializable {
         }
         return viewResultInfo;
     }
+
+    public static ViewInfo from(Object data) {
+        ViewInfo viewResultInfo = new ViewInfo();
+        viewResultInfo.setSuccess(true);
+        viewResultInfo.setData(data);
+        return viewResultInfo;
+    }
+
+
     /**
      * 用于json序列化
      */

@@ -86,4 +86,19 @@ public class Dates {
 	}
 
 
+	public static String format(Date date) {
+		return format(date, DEFAULT_DATE_FORMAT);
+	}
+	public static String format(Date date, String pattern) {
+		SimpleDateFormat sdf = getSimpleDateFormat(pattern);
+		return sdf.format(date);
+	}
+
+	public static SimpleDateFormat getSimpleDateFormat(String defaultFormat) {
+		if (defaultFormat!=null && defaultFormat!="") {
+			defaultFormat = DEFAULT_DATE_FORMAT;
+		}
+		return new SimpleDateFormat(defaultFormat);
+	}
+
 }

@@ -7,8 +7,6 @@ import org.apache.ibatis.binding.MapperMethod;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlSource;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.util.Assert;
 import tk.mybatis.mapper.entity.EntityColumn;
@@ -21,54 +19,19 @@ import tk.mybatis.mapper.mapperhelper.SqlHelper;
 import java.util.List;
 import java.util.Map;
 
-public interface FindMapper<T> {
-	@SelectProvider(type = FindProvider.class, method = "dynamicSQL")
-	List<T> find(String property, Object value);
+public interface ListMapper<T> {
+
 	
-	@SelectProvider(type = FindProvider.class, method = "dynamicSQL")
-	T findOne(String property, Object value);
-
-	@SelectProvider(type = FindProvider.class, method = "dynamicSQL")
-	Page<T> findAllPage(Map<String, Object> map, Pageable pageable);
-
-	class FindProvider extends MapperTemplate {
+	@SelectProvider(type = ListProvider.class, method = "dynamicSQL")
+	List<T> findAll(Map<String, Object> map, Sort sort);
+	
+	class ListProvider extends MapperTemplate {
 		
-		public FindProvider(Class<?> mapperClass, MapperHelper mapperHelper) {
+		public ListProvider(Class<?> mapperClass, MapperHelper mapperHelper) {
 			super(mapperClass, mapperHelper);
 		}
-		
-		public void find(MappedStatement ms) {
-			final Class<?> entityClass = getEntityClass(ms);
-			//将返回值修改为实体类型
-			setResultType(ms, entityClass);
-			StringBuilder sql = new StringBuilder();
-			sql.append(SqlHelper.selectAllColumns(entityClass));
-			sql.append(SqlHelper.fromTable(entityClass, tableName(entityClass)));
-			Map<String, Class<?>> fieldsTypes = Maps.newHashMap();
-			EntityTable entityTable = EntityHelper.getEntityTable(entityClass);
-			for (EntityColumn column : entityTable.getEntityClassColumns()) {
-				fieldsTypes.put(column.getProperty(), column.getJavaType());
-			}
-			FindSqlSource findSqlSource = new FindSqlSource(ms, entityClass, sql.toString(), fieldsTypes, false);
-			setSqlSource(ms, findSqlSource);
-		}
-		
-		public void findOne(MappedStatement ms) {
-			final Class<?> entityClass = getEntityClass(ms);
-			//将返回值修改为实体类型
-			setResultType(ms, entityClass);
-			StringBuilder sql = new StringBuilder();
-			sql.append(SqlHelper.selectAllColumns(entityClass));
-			sql.append(SqlHelper.fromTable(entityClass, tableName(entityClass)));
-			Map<String, Class<?>> fieldsTypes = Maps.newHashMap();
-			EntityTable entityTable = EntityHelper.getEntityTable(entityClass);
-			for (EntityColumn column : entityTable.getEntityClassColumns()) {
-				fieldsTypes.put(column.getProperty(), column.getJavaType());
-			}
-			FindSqlSource findSqlSource = new FindSqlSource(ms, entityClass, sql.toString(), fieldsTypes, true);
-			setSqlSource(ms, findSqlSource);
-		}
-		public void findAllPage(MappedStatement ms) {
+
+		public void findAll(MappedStatement ms) {
 			final Class<?> entityClass = getEntityClass(ms);
 			//将返回值修改为实体类型
 			setResultType(ms, entityClass);
@@ -84,23 +47,24 @@ public interface FindMapper<T> {
 			setSqlSource(ms, findSqlSource);
 		}
 	}
+	
 	class FindAllSqlSource implements SqlSource {
 		private MappedStatement ms;
 		private String sql;
 		private Map<String, Class<?>> fieldsTypes;
-
+		
 		public FindAllSqlSource(MappedStatement ms, String sql, Map<String, Class<?>> fieldsTypes) {
 			this.ms = ms;
 			this.sql = sql;
 			this.fieldsTypes = fieldsTypes;
 		}
-
+		
 		@Override
 		public BoundSql getBoundSql(Object parameterObject) {
 			Assert.isInstanceOf(MapperMethod.ParamMap.class, parameterObject);
 			MapperMethod.ParamMap paramMap = (MapperMethod.ParamMap) parameterObject;
 			Map<String, Object> map = (Map<String, Object>) paramMap.get("param1");
-			Pageable pageable = (Pageable) paramMap.get("param2");
+			Sort sort = (Sort) paramMap.get("param2");
 			StringBuilder sqlResult = new StringBuilder();
 			sqlResult.append(sql);
 			if (map != null && !map.isEmpty()) {
@@ -118,57 +82,73 @@ public interface FindMapper<T> {
 				sqlResult.delete(sqlResult.length() - 4, sqlResult.length() - 1);
 			}
 			sqlResult.append("order by ");
-			if (pageable == null||pageable.getSort()==null) {
+			if (sort == null) {
 				sqlResult.append(" id desc");
 			} else {
 				int idx = 0;
-				Sort sort=pageable.getSort();
 				for (Sort.Order order : sort) {
 					idx++;
 					sqlResult.append(SearchFilterParser.camelToUnderline(order.getProperty())	+ "  "
-							+ (order.getDirection().name()));
+										+ (order.getDirection().name()));
 					sqlResult.append(",");
 				}
 				if (idx != 0) {
 					sqlResult.deleteCharAt(sqlResult.length() - 1);
 				}
 			}
-
+			
 			BoundSql boundSql = new BoundSql(ms.getConfiguration(), sqlResult.toString(), null, null);
 			return boundSql;
 		}
 	}
-	class FindSqlSource implements SqlSource {
+	
+	class ListSqlSource implements SqlSource {
 		private MappedStatement ms;
-		private Class<?> entityClass;
 		private String sql;
 		private Map<String, Class<?>> fieldsTypes;
-		private boolean unique;
+		private int index;
 		
-		public FindSqlSource(MappedStatement ms, Class<?> entityClass, String sql, Map<String, Class<?>> fieldsTypes,
-                             boolean unique) {
+		public ListSqlSource(MappedStatement ms, Class<?> entityClass, String sql, Map<String, Class<?>> fieldsTypes,
+                             int index) {
 			this.ms = ms;
-			this.entityClass = entityClass;
 			this.sql = sql;
 			this.fieldsTypes = fieldsTypes;
-			this.unique = unique;
+			this.index = index;
 		}
 		
 		@Override
 		public BoundSql getBoundSql(Object parameterObject) {
 			Assert.isInstanceOf(MapperMethod.ParamMap.class, parameterObject);
 			MapperMethod.ParamMap paramMap = (MapperMethod.ParamMap) parameterObject;
-			String property = (String) paramMap.get("param1");
-			SearchFilter searchFilter = SearchFilter.parse(property, paramMap.get("param2"));
+			Map<String, Object> map = (Map<String, Object>) paramMap.get("param" + index);
+			Map<String, Boolean> sortMap = (Map<String, Boolean>) paramMap.get("param" + (index + 1));
 			StringBuilder sqlResult = new StringBuilder();
 			sqlResult.append(sql);
-			sqlResult.append(" WHERE ");
-			Class proType = fieldsTypes.get(searchFilter.fieldName);
-			Assert.notNull(proType, "属性[" + searchFilter.fieldName + "]不存在");
-			sqlResult.append(SearchFilterParser.parseSqlField(searchFilter, proType));
-			if (unique) {
-				sqlResult.append(" limit 1");
+			if (map != null && !map.isEmpty()) {
+				sqlResult.append(" WHERE ");
+				for (Map.Entry<String, Object> entry : map.entrySet()) {
+					SearchFilter searchFilter = SearchFilter.parse(entry.getKey(), entry.getValue());
+					if (searchFilter == null) {
+						continue;
+					}
+					Class proType = fieldsTypes.get(searchFilter.fieldName);
+					Assert.notNull(proType, "属性[" + searchFilter.fieldName + "]不存在");
+					sqlResult.append(SearchFilterParser.parseSqlField(searchFilter, proType));
+					sqlResult.append(" AND ");
+				}
+				sqlResult.delete(sqlResult.length() - 4, sqlResult.length() - 1);
 			}
+			sqlResult.append("order by ");
+			if (sortMap == null || sortMap.isEmpty()) {
+				sqlResult.append(" id desc");
+			} else {
+				for (Map.Entry<String, Boolean> entry : sortMap.entrySet()) {
+					sqlResult.append(entry.getKey() + "  " + (entry.getValue() ? "ASC" : "DESC"));
+					sqlResult.append(",");
+				}
+				sqlResult.deleteCharAt(sqlResult.length() - 1);
+			}
+			
 			BoundSql boundSql = new BoundSql(ms.getConfiguration(), sqlResult.toString(), null, null);
 			return boundSql;
 		}

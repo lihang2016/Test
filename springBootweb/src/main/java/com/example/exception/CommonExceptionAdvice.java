@@ -29,6 +29,12 @@ public class CommonExceptionAdvice {
         return ViewInfo.from(new SingleResponse().failure(e.getMessage(),e.getCode()));
     }
 
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ViewInfo IllegalArgumentException(IllegalArgumentException e) {
+        logger.error("业务逻辑异常", e);
+        return ViewInfo.from(new SingleResponse().failure(e.getMessage(),500));
+    }
     /**
      * 500 - Internal Server Error
      */
@@ -36,7 +42,7 @@ public class CommonExceptionAdvice {
     @ExceptionHandler(RuntimeException.class)
     public ViewInfo runtimeException(RuntimeException e) {
         logger.error("业务逻辑异常", e);
-        return ViewInfo.from(new SingleResponse().failure("属性[aaa]不存在",500));
+        return ViewInfo.from(new SingleResponse().failure("内部错误",500));
     }
 
     /**

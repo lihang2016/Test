@@ -6,12 +6,17 @@ import com.example.exception.CPBusinessException;
 import com.example.member.app.dto.LoginDto;
 import com.example.member.app.service.MemberAppService;
 import com.example.member.domain.entity.Member;
+import com.example.member.domain.enums.Sex;
 import com.example.member.domain.repository.MemberRepository;
 import com.example.member.domain.repository.MybatisMapperRepository;
 import com.example.util.DomainService;
 import com.example.util.event.EventBus;
+import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
+
+import java.util.*;
 
 /**
  * 会员领域服务
@@ -47,6 +52,19 @@ public class MemberDomainService {
     }
 
     public Page<Member> findById(PageRequest<NULL> pageRequest){
+//        List<Member> memberList=mybatisMapperRepository.find("EQ_sex",Sex.MAN.getCode());
+//        List<Member> memberList1=mybatisMapperRepository.listMember(sex);
+        Member member=new Member();
+        member.setAddress("aaaa");
+        member.setId(2L);
+        mybatisMapperRepository.update(member);
+        Sort sort=new Sort(Sort.Direction.ASC,"id");
+        Map<String,Object> map= Maps.newHashMap();
+        map.put("EQ_sex",Sex.MAN.getCode());
+
+        List<Member> members=mybatisMapperRepository.findAll(map,sort);
+
+
         return mybatisMapperRepository.findAllPage(pageRequest.getMap(),pageRequest.getPageable());
     }
 

@@ -50,7 +50,10 @@ public class ControllerInterceptor {
             Set<ConstraintViolation<Object>> violations = validator.validate(o);
             if(violations.size() != 0)
                 for(ConstraintViolation<Object> violation: violations) {
-                    CPBusinessException.throwIt(violation.getMessage(),123);
+                    CPBusinessException.throwIt(violation.getMessageTemplate()!=null &&
+                            !"".equals(violation.getMessageTemplate())?
+                            violation.getMessageTemplate():violation.getMessage(),
+                            123);
                 }
         }
         return pjp.proceed();

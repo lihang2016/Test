@@ -24,13 +24,6 @@ import java.util.List;
  * <p>2. json转换为UDC: json值类型为字符串，格式为typeCode,itemValue
  * <p>3. 请求参数转换为UDC: 格式为typeCode,itemValue
  * <p>
- * 参考用例:
- * <ul>
- * <li>com.zds.scf.biz.web.common.controller.DemoController#testUDC(com.zds.scf.biz.common.udc.UDC)</li>
- * <li>com.zds.scf.biz.web.common.controller.DemoController#testUDC1(com.zds.scf.biz.common.udc.UDC)</li>
- * <li>com.zds.scf.biz.web.common.controller.DemoController#testUDC2(com.zds.scf.biz.common.udc.UDC)</li>
- * <li>com.zds.scf.biz.web.common.controller.DemoController#testUDC3(com.zds.scf.biz.common.udc.UDC)</li>
- * </ul>
  *
  *
  */

@@ -1,5 +1,6 @@
 package com.example.member.domain.service;
 
+import com.example.common.udc.UDC;
 import com.example.dto.NULL;
 import com.example.dto.PageRequest;
 import com.example.exception.CPBusinessException;
@@ -57,6 +58,7 @@ public class MemberDomainService {
         Member member=new Member();
         member.setAddress("aaaa");
         member.setId(2L);
+        member.setTestUdc(UDC.newUDCWithItemCode("hehe","haha"));
         mybatisMapperRepository.update(member);
         Sort sort=new Sort(Sort.Direction.ASC,"id");
         Map<String,Object> map= Maps.newHashMap();

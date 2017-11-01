@@ -22,6 +22,7 @@ import net.engio.mbassy.bus.config.Feature;
 import net.engio.mbassy.bus.config.IBusConfiguration;
 import net.engio.mbassy.bus.error.IPublicationErrorHandler;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
@@ -125,7 +126,7 @@ public class CommonConfigration {
      * 自定义分页插件配置
      */
     @PostConstruct
-    public void addPageInterceptor() {
+    public void addPageInterceptor() throws Exception {
         PageableExecutorInterceptor interceptor = new PageableExecutorInterceptor();
 //        OptimisticLocker optimisticLocker=new OptimisticLocker();
         for (SqlSessionFactory sqlSessionFactory : sqlSessionFactoryList) {

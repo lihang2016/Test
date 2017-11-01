@@ -1,5 +1,6 @@
 package com.example.member.domain.entity;
 
+import com.example.common.udc.UDC;
 import com.example.domain.entity.AggEntity;
 import com.example.member.domain.enums.Sex;
 
@@ -20,6 +21,9 @@ public class Member extends AggEntity {
     @Column(name="sex",columnDefinition = "varchar(40) comment '性别'")
     @Enumerated(EnumType.STRING)
     private Sex sex;
+
+    @Column(name="test_udc",columnDefinition = "varchar(40) comment 'testUDC'")
+    private UDC testUdc;
 
     @Column(name="id_card",columnDefinition = "varchar(20) comment '身份证号'")
     private String idCard;
@@ -42,6 +46,14 @@ public class Member extends AggEntity {
     @Column(name="member_type",columnDefinition = "varchar(15) comment '会员类型'")
     private String memberType;
 
+
+    public UDC getTestUdc() {
+        return testUdc;
+    }
+
+    public void setTestUdc(UDC testUdc) {
+        this.testUdc = testUdc;
+    }
 
     public Sex getSex() {
         return sex;

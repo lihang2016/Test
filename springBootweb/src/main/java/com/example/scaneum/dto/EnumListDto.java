@@ -26,5 +26,5 @@ public class EnumListDto {
     /**
      * 枚举类名对应的实例集合
      */
-    private String enumsList;
+    private List<Enum> enumsList;
 }

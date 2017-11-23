@@ -1,14 +1,13 @@
 package com.example.member.domain.enums;
 
-import com.example.Annto.Enums;
+import com.example.webconverter.Messageable;
 
 /**
  * @Author lihang 【962309372@qq.com】
  * @Description
  * @Date 2017/10/22 11:07
  */
-@Enums
-public enum  Sex {
+public enum  Sex implements Messageable{
 
     MAN("MAN","男"),
     WOMAN("WOMAN","女");
@@ -22,19 +21,13 @@ public enum  Sex {
         this.code=code;
     }
 
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
-
-    public String getCode() {
+    @Override
+    public String code() {
         return code;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    @Override
+    public String message() {
+        return msg;
     }
 }

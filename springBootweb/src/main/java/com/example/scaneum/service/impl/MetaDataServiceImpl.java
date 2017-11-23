@@ -53,7 +53,7 @@ public class MetaDataServiceImpl implements MetaDataService {
     /**
      * 枚举实例缓存
      */
-    private Map<String, String> enumInstanceMap = new ConcurrentHashMap<>();
+    private Map<String, List<Enum>> enumInstanceMap = new ConcurrentHashMap<>();
     /**
      * 工作流实体元数据缓存
      */
@@ -207,7 +207,7 @@ public class MetaDataServiceImpl implements MetaDataService {
      * @return
      */
     @Override
-    public String getByEnumClassSimpleName(String classSimpleName) {
+    public List<Enum> getByEnumClassSimpleName(String classSimpleName) {
         return enumInstanceMap.get(classSimpleName);
     }
 
@@ -253,17 +253,17 @@ public class MetaDataServiceImpl implements MetaDataService {
                                 Class aClass = Class.forName(className);
                                 //排除private的枚举
                                 if (Modifier.isPublic(aClass.getModifiers())) {
-//                                    Method method = aClass.getMethod("values");
-//                                    Enum inter[] = (Enum[]) method.invoke(null, null);
-//                                    List<Enum> enumList = new ArrayList<>();
-//                                    for (Enum enumMessage : inter) {
-//                                        enumList.add(enumMessage);
-//                                    }
+                                    Method method = aClass.getMethod("values");
+                                    Enum inter[] = (Enum[]) method.invoke(null, null);
+                                    List<Enum> enumList = new ArrayList<>();
+                                    for (Enum enumMessage : inter) {
+                                        enumList.add(enumMessage);
+                                    }
                                     if (filterEnum(aClass)) {
                                         if (enumInstanceMap.containsKey(aClass.getSimpleName())) {
                                             throw Exceptions.runtimeException("存在类名相同的枚举,请修改:" + aClass.getSimpleName());
                                         }
-                                        enumInstanceMap.put(aClass.getSimpleName(), toJson(aClass));
+                                        enumInstanceMap.put(aClass.getSimpleName(), enumList);
                                     }
                                 }
                             }

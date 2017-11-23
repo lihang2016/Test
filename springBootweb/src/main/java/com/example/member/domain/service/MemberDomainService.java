@@ -53,20 +53,6 @@ public class MemberDomainService {
     }
 
     public Page<Member> findById(PageRequest<NULL> pageRequest){
-//        List<Member> memberList=mybatisMapperRepository.find("EQ_sex",Sex.MAN.getCode());
-//        List<Member> memberList1=mybatisMapperRepository.listMember(sex);
-        Member member=new Member();
-        member.setAddress("aaaa");
-        member.setId(2L);
-        member.setTestUdc(UDC.newUDCWithItemCode("hehe","haha"));
-        mybatisMapperRepository.update(member);
-        Sort sort=new Sort(Sort.Direction.ASC,"id");
-        Map<String,Object> map= Maps.newHashMap();
-        map.put("EQ_sex",Sex.MAN.getCode());
-
-        List<Member> members=mybatisMapperRepository.findAll(map,sort);
-
-
         return mybatisMapperRepository.findAllPage(pageRequest.getMap(),pageRequest.getPageable());
     }
 

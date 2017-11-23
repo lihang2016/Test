@@ -1,5 +1,7 @@
 package com.example.member.app.dto;
 
+import com.example.member.domain.enums.Sex;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -14,6 +16,7 @@ public class MemberDto implements Serializable{
 
     private String memberName;
 
+    private Sex sex;
 
     private String idCard;
 
@@ -28,6 +31,14 @@ public class MemberDto implements Serializable{
     private String passWord;
 
     private String memberType;
+
+    public Sex getSex() {
+        return sex;
+    }
+
+    public void setSex(Sex sex) {
+        this.sex = sex;
+    }
 
     public String getMemberName() {
         return memberName;

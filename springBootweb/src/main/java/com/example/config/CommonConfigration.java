@@ -34,10 +34,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ClassPathBeanDefinitionScanner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.type.filter.AssignableTypeFilter;
+import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -71,16 +74,16 @@ public class CommonConfigration {
      * 配置responseBody试用fastjson
      * @return
      */
-    @Bean
-    public HttpMessageConverters fastJsonHttpMessageConverters() {
-        FastJsonHttpMessageConverter fastConverter = new FastJsonHttpMessageConverter();
-        FastJsonConfig fastJsonConfig = new FastJsonConfig();
-        //格式化json返回
-        fastJsonConfig.setSerializerFeatures(SerializerFeature.PrettyFormat);
-        fastConverter.setFastJsonConfig(fastJsonConfig);
-        HttpMessageConverter<?> converter = fastConverter;
-        return new HttpMessageConverters(converter);
-    }
+//    @Bean
+//    public HttpMessageConverters fastJsonHttpMessageConverters() {
+//        FastJsonHttpMessageConverter fastConverter = new FastJsonHttpMessageConverter();
+//        FastJsonConfig fastJsonConfig = new FastJsonConfig();
+//        //格式化json返回
+//        fastJsonConfig.setSerializerFeatures(SerializerFeature.PrettyFormat);
+//        fastConverter.setFastJsonConfig(fastJsonConfig);
+//        HttpMessageConverter<?> converter = fastConverter;
+//        return new HttpMessageConverters(converter);
+//    }
 
     @Bean
     public static BeanPostProcessor cpAppServiceBeanCheckerPostProcessor() {

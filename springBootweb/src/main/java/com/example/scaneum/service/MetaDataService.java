@@ -49,7 +49,7 @@ public interface MetaDataService {
      * @param classSimpleName 例： CustomerType
      * @return
      */
-    String getByEnumClassSimpleName(String classSimpleName);
+    List<Enum> getByEnumClassSimpleName(String classSimpleName);
     
     /**
      * 根据多个枚举类名,获取枚举的所有实例

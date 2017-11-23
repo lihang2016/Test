@@ -3,6 +3,7 @@ package com.example.member.app.dto;
 import com.example.Annto.Phone;
 import com.example.common.udc.UDC;
 import com.example.dto.BaseDto;
+import com.example.member.domain.enums.Sex;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,12 +19,11 @@ import javax.validation.constraints.Null;
 @Setter
 public class LoginDto extends BaseDto {
 
-    @Phone(message = "手机号码有问题")
     private String phone;
 
     private String password;
 
-    private UDC sex;
+    private Sex sex;
 
     public interface Update{
 

@@ -42,6 +42,10 @@ public class MemberController {
          return ViewInfo.from(memberAppService.findById(s));
     }
 
+    @RequestMapping(value = "/testEnum",method = RequestMethod.GET)
+    public ViewInfo testEnum(LoginDto LoginDto){
+        return new  ViewInfo();
+    }
     @RequestMapping(value = "/testValia",method = RequestMethod.GET)
     public ViewInfo queryTest(LoginDto loginDto){
         return ViewInfo.from(memberAppService.findByPhoneAndPassword(loginDto));

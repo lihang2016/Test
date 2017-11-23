@@ -28,8 +28,8 @@ public class DemoApplicationTests {
 	@Test
 	public void testUDC(){
 		LoginDto loginDto=new LoginDto();
-		loginDto.setSex(UDC.newUDCWithItemCode("sex", "man"));
-		memberAppService.findByPhoneAndPassword(loginDto);
+//		loginDto.setSex(UDC.newUDCWithItemCode("sex", "man"));
+//		memberAppService.findByPhoneAndPassword(loginDto);
 	}
 //
 //	@Test

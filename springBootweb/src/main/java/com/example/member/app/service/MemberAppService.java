@@ -1,8 +1,6 @@
 package com.example.member.app.service;
 
-import com.example.dto.NULL;
-import com.example.dto.PageRequest;
-import com.example.dto.SingleResponse;
+import com.example.dto.*;
 import com.example.member.app.dto.LoginDto;
 import com.example.member.app.dto.MemberDto;
 import com.example.member.domain.service.MemberDomainService;
@@ -28,10 +26,14 @@ public class MemberAppService {
      * @return
      */
     public SingleResponse<MemberDto> findByPhoneAndPassword(LoginDto loginDto){
-        return SingleResponse.from(memberDomainService.findByPhoneAndPassword(loginDto).to(MemberDto.class));
+        return SingleResponse.from(memberDomainService.findByPhoneAndPassword(loginDto),MemberDto.class);
     }
 
-    public SingleResponse<Page<MemberDto>> findById(PageRequest<NULL> pageRequest){
-        return SingleResponse.from(Pages.map(memberDomainService.findById(pageRequest), MemberDto.class));
+    public PageResult<MemberDto> findById(PageRequest<Null> pageRequest){
+        return PageResult.from(memberDomainService.findById(pageRequest),MemberDto.class);
+    }
+
+    public ListResult<MemberDto> findByxxx(ListRequest<Null> listRequest){
+        return ListResult.from(memberDomainService.findxx(listRequest),MemberDto.class);
     }
 }

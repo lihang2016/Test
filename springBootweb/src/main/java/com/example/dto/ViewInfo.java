@@ -36,6 +36,11 @@ public class ViewInfo implements Serializable {
      */
     private String message;
 
+    public ViewInfo data(Object data){
+        this.data=data;
+        return  this;
+    }
+
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }

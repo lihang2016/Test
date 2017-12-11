@@ -1,6 +1,7 @@
 package com.example.controller;
 
-import com.example.dto.NULL;
+import com.example.dto.ListRequest;
+import com.example.dto.Null;
 import com.example.dto.PageRequest;
 import com.example.dto.ViewInfo;
 import com.example.member.app.dto.LoginDto;
@@ -38,8 +39,8 @@ public class MemberController {
         return new ViewInfo();
     }
     @RequestMapping(value = "/testMybatis",method = RequestMethod.GET)
-    public ViewInfo queryPersonTwo(PageRequest<NULL> s){
-         return ViewInfo.from(memberAppService.findById(s));
+    public ViewInfo queryPersonTwo(PageRequest<Null> s){
+         return memberAppService.findById(s).to();
     }
 
     @RequestMapping(value = "/testEnum",method = RequestMethod.GET)
@@ -49,6 +50,11 @@ public class MemberController {
     @RequestMapping(value = "/testValia",method = RequestMethod.GET)
     public ViewInfo queryTest(LoginDto loginDto){
         return ViewInfo.from(memberAppService.findByPhoneAndPassword(loginDto));
+    }
+
+    @RequestMapping(value = "/testListResult",method = RequestMethod.GET)
+    public ViewInfo testListResult(ListRequest<Null> listRequest){
+        return memberAppService.findByxxx(listRequest).to();
     }
 
     @RequestMapping(value = "/front/testfront.json")

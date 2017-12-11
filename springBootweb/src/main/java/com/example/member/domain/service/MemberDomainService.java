@@ -1,24 +1,19 @@
 package com.example.member.domain.service;
 
-import com.example.common.udc.UDC;
-import com.example.dto.NULL;
+import com.example.dto.ListRequest;
+import com.example.dto.Null;
 import com.example.dto.PageRequest;
 import com.example.exception.CPBusinessException;
 import com.example.member.app.dto.LoginDto;
 import com.example.member.app.service.MemberAppService;
 import com.example.member.domain.entity.Member;
-import com.example.member.domain.enums.Sex;
 import com.example.member.domain.repository.MemberRepository;
 import com.example.member.domain.repository.MybatisMapperRepository;
 import com.example.util.DomainService;
 import com.example.util.event.EventBus;
-import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Sort;
-
-import java.util.*;
-
+import java.util.List;
 /**
  * 会员领域服务
  * Created by 96230 on 2017/6/10.
@@ -52,8 +47,12 @@ public class MemberDomainService {
         return member;
     }
 
-    public Page<Member> findById(PageRequest<NULL> pageRequest){
+    public Page<Member> findById(PageRequest<Null> pageRequest){
         return mybatisMapperRepository.findAllPage(pageRequest.getMap(),pageRequest.getPageable());
+    }
+
+    public List<Member> findxx(ListRequest<Null> listRequest){
+        return mybatisMapperRepository.findAll(listRequest.getMap(),listRequest.getSort());
     }
 
 }

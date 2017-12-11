@@ -12,7 +12,7 @@ import java.util.Map;
  */
 @Getter
 @Setter
-public class PageRequest<T extends NULL> extends BaseDto {
+public class PageRequest<T extends Null> extends BaseDto {
     Map<String,Object> map;
 
     Pageable pageable;

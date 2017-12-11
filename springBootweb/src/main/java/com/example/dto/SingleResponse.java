@@ -1,5 +1,7 @@
 package com.example.dto;
 
+import com.example.util.BeanCopier;
+
 /**
  * Created by 96230 on 2017/5/29.
  */
@@ -9,8 +11,18 @@ public   class SingleResponse<T>  extends CPResponse{
     public SingleResponse(T data){
         this.data=data;
     }
+
     public SingleResponse(){
 
+    }
+
+    public static <T, S> SingleResponse<S> from(T t, Class<S> clazz,String ...ignoreProperties) {
+        SingleResponse<S> singleResult = new SingleResponse<>();
+        if (t != null) {
+            singleResult.setData(BeanCopier.copy(t, clazz, BeanCopier.CopyStrategy.IGNORE_NULL,ignoreProperties));
+        }
+        singleResult.setSuccess(Boolean.TRUE);
+        return singleResult;
     }
 
     public static <T> SingleResponse<T> from(T data){

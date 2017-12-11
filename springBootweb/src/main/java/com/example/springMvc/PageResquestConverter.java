@@ -3,8 +3,11 @@ package com.example.springMvc;
 
 import com.example.dto.PageRequest;
 import com.google.common.collect.Maps;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -17,34 +20,37 @@ import java.util.*;
  * @Description:自定义PageRequest 类型转换
  * @Date 2017/10/28 13:01
  */
+@Component
+public class PageResquestConverter extends AbstractArgumentResolver {
 
-public class PageResquestConverter implements HandlerMethodArgumentResolver {
+    @Autowired
+    private PageableHandlerMethodArgumentResolver pageableHandlerMethodArgumentResolver;
+
     @Override
     public boolean supportsParameter(MethodParameter methodParameter) {
-        if (methodParameter.getParameterType().isAssignableFrom(PageRequest.class)) {
-            return true;
-        }
-        return false;
+       return PageRequest.class.equals(methodParameter.getParameterType());
     }
 
     @Override
-    public Object resolveArgument(MethodParameter methodParameter, ModelAndViewContainer modelAndViewContainer, NativeWebRequest nativeWebRequest, WebDataBinderFactory webDataBinderFactory) throws Exception {
-        Map<String, String[]> map1 = nativeWebRequest.getParameterMap();
-        Map<String, Object> map = Maps.newHashMap();
-        PageRequest pageRequest = new PageRequest();
-        Integer size=10;
-        Integer page=0;
-        for (String in : map1.keySet()) {
-            if("size".equals(in)){
-                size=Integer.parseInt(map1.get(in)[0]);
-            }else
-            if("page".equals(in)) page=Integer.parseInt(map1.get(in)[0])==1?0:Integer.parseInt(map1.get(in)[0]);
-            else
-            map.put(in,map1.get(in)[0]);//填充map
+    public Object resolveArgument(MethodParameter methodParameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+        Map<String, Object> pageRequestMap = Maps.newHashMap();
+        Map<String, String> dtos = Maps.newHashMap();
+        for (Map.Entry<String, String[]> entry : webRequest.getParameterMap().entrySet()) {
+            if (entry.getKey().contains("_")) {
+                if( entry.getValue()[0] instanceof String){
+                    injectDetect(entry.getValue()[0]);
+                }
+                pageRequestMap.put(entry.getKey(), entry.getValue()[0]);
+            } else {
+                dtos.put(entry.getKey(), entry.getValue()[0]);
+            }
         }
-        pageRequest.setMap(map);
-        Pageable pageable = new org.springframework.data.domain.PageRequest(page,size);
-        pageRequest.setPageable(pageable);
+        PageRequest pageRequest = new PageRequest();
+        Pageable pageable = pageableHandlerMethodArgumentResolver.resolveArgument(methodParameter, mavContainer, webRequest,
+                binderFactory);
+        org.springframework.data.domain.PageRequest pageRequest1 = new org.springframework.data.domain.PageRequest(pageable.getPageNumber() - 1, pageable.getPageSize(), pageable.getSort());
+        pageRequest.setPageable(pageRequest1);
+        pageRequest.setMap(pageRequestMap);
         return pageRequest;
     }
 }

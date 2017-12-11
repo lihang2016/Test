@@ -1,7 +1,15 @@
 package com.example.springMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
+import org.springframework.data.web.SortHandlerMethodArgumentResolver;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -10,6 +18,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import java.util.Iterator;
 import java.util.List;
 import java.util.TimeZone;
+
+import static org.springframework.beans.support.PagedListHolder.DEFAULT_PAGE_SIZE;
 
 /**
  * @Author lihang 【962309372@qq.com】
@@ -25,7 +35,8 @@ public class PageRequestConfig extends WebMvcConfigurerAdapter {
     @Override
 	public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
 		super.addArgumentResolvers(argumentResolvers);
-		argumentResolvers.add(new PageResquestConverter());
+		argumentResolvers.add(pageableHandlerMethodArgumentResolver());
+		argumentResolvers.add(pageRequestArgumentResolver());
 	}
 
 	/**
@@ -44,5 +55,23 @@ public class PageRequestConfig extends WebMvcConfigurerAdapter {
 			}
 		}
 		//	super.configureMessageConverters(converters);
+	}
+
+	@Bean
+	public PageableHandlerMethodArgumentResolver pageableHandlerMethodArgumentResolver() {
+		PageableHandlerMethodArgumentResolver pageableHandlerMethodArgumentResolver = new PageableHandlerMethodArgumentResolver(
+				sortHandlerMethodArgumentResolver());
+		PageRequest pageRequest = new PageRequest(0, DEFAULT_PAGE_SIZE);
+		pageableHandlerMethodArgumentResolver.setFallbackPageable(pageRequest);
+		return pageableHandlerMethodArgumentResolver;
+	}
+
+	@Bean
+	public PageResquestConverter pageRequestArgumentResolver() {
+		return new PageResquestConverter();
+	}
+	@Bean
+	public SortHandlerMethodArgumentResolver sortHandlerMethodArgumentResolver() {
+		return new CustomSortHandlerMethodArgumentResolver();
 	}
 }

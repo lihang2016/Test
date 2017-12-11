@@ -86,15 +86,15 @@ public class BaseEntity implements Serializable {
     }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", columnDefinition = "int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键'")
+    @Column(name = "id", columnDefinition = "int(11) unsigned NOT Null AUTO_INCREMENT COMMENT '主键'")
     protected Long id;
 
     @Column(name = "raw_add_time", insertable = false, updatable = false,
-            columnDefinition = " timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'")
+            columnDefinition = " timestamp NOT Null DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'")
     protected Date rawAddTime = null;
 
     @Column(name = "raw_update_time", insertable = false, updatable = false,
-            columnDefinition = "timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间'")
+            columnDefinition = "timestamp Null DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间'")
     protected Date rawUpdateTime = new Date();
 
     public Long getId() {

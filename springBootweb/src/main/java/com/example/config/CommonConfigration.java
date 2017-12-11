@@ -13,6 +13,7 @@ import com.example.mybatisMapper.pages.PageObjectFactory;
 import com.example.mybatisMapper.pages.PageObjectWrapperFactory;
 import com.example.mybatisMapper.pages.PageableExecutorInterceptor;
 import com.example.scaneum.listener.MeataApplicationReadyListener;
+import com.example.springMvc.CustomSortHandlerMethodArgumentResolver;
 import com.example.springMvc.PageResquestConverter;
 import com.example.util.event.EventBus;
 import com.example.util.event.EventHandler;
@@ -34,6 +35,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ClassPathBeanDefinitionScanner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.type.filter.AssignableTypeFilter;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
+import org.springframework.data.web.SortHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -42,6 +46,8 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.springframework.beans.support.PagedListHolder.DEFAULT_PAGE_SIZE;
 
 /**
  *配置事件类
@@ -150,6 +156,8 @@ public class CommonConfigration {
     public MeataApplicationReadyListener meataApplicationReadyListener(){
         return new MeataApplicationReadyListener();
     }
+
+
 
     @PostConstruct
     public void init() {

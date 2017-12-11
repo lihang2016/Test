@@ -22,7 +22,7 @@ public class Member extends AggEntity {
     @Enumerated(EnumType.STRING)
     private Sex sex;
 
-    @Column(name="test_udc",columnDefinition = "varchar(40) comment 'testUDC'")
+    @Column(name="hehe",columnDefinition = "varchar(40) comment 'testUDC'")
     private UDC testUdc;
 
     @Column(name="id_card",columnDefinition = "varchar(20) comment '身份证号'")

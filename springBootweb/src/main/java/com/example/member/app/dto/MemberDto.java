@@ -1,6 +1,10 @@
 package com.example.member.app.dto;
 
+import com.example.common.udc.UDC;
 import com.example.member.domain.enums.Sex;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -10,6 +14,8 @@ import java.util.Date;
  * @Description:
  * @Date Create in 14:39 2017/7/20
  */
+@Getter
+@Setter
 public class MemberDto implements Serializable{
 
     private static final long serialVersionUID = -1383806067748513736L;
@@ -21,6 +27,8 @@ public class MemberDto implements Serializable{
     private String idCard;
 
     private String phone;
+
+    private UDC testUdc;
 
     private Date birthday;
 

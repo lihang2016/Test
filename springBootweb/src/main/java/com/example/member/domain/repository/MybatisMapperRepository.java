@@ -15,7 +15,7 @@ import java.util.*;
  */
 public interface MybatisMapperRepository extends BaseMapper<Member> {
 
-    @Select("select * from member where sex=#{sex}")
+    @Select("select * from member m where sex=#{sex}")
     List<Member>  listMember(@Param("sex") Sex sex);
 
 }

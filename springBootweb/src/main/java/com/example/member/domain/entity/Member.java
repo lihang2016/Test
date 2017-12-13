@@ -3,6 +3,8 @@ package com.example.member.domain.entity;
 import com.example.common.udc.UDC;
 import com.example.domain.entity.AggEntity;
 import com.example.member.domain.enums.Sex;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -12,6 +14,8 @@ import java.util.Date;
  */
 @Entity
 @Table(name="member")
+@Getter
+@Setter
 public class Member extends AggEntity {
 
 
@@ -23,9 +27,9 @@ public class Member extends AggEntity {
     private Sex sex;
 
     @Column(name="hehe",columnDefinition = "varchar(40) comment 'testUDC'")
-    private UDC testUdc;
+    private UDC hehe;
 
-    @Column(name="id_card",columnDefinition = "varchar(20) comment '身份证号'")
+    @Column(name="idCard",columnDefinition = "varchar(20) comment '身份证号'")
     private String idCard;
 
     @Column(name="phone",columnDefinition = "varchar(15) comment '手机号码'")
@@ -46,84 +50,4 @@ public class Member extends AggEntity {
     @Column(name="member_type",columnDefinition = "varchar(15) comment '会员类型'")
     private String memberType;
 
-
-    public UDC getTestUdc() {
-        return testUdc;
-    }
-
-    public void setTestUdc(UDC testUdc) {
-        this.testUdc = testUdc;
-    }
-
-    public Sex getSex() {
-        return sex;
-    }
-
-    public void setSex(Sex sex) {
-        this.sex = sex;
-    }
-
-    public String getMemberType() {
-        return memberType;
-    }
-
-    public void setMemberType(String memberType) {
-        this.memberType = memberType;
-    }
-
-    public String getMemberName() {
-        return memberName;
-    }
-
-    public void setMemberName(String memberName) {
-        this.memberName = memberName;
-    }
-
-    public String getIdCard() {
-        return idCard;
-    }
-
-    public void setIdCard(String idCard) {
-        this.idCard = idCard;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public Date getBirthday() {
-        return birthday;
-    }
-
-    public void setBirthday(Date birthday) {
-        this.birthday = birthday;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getCompanyName() {
-        return companyName;
-    }
-
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
-    }
-
-    public String getPassWord() {
-        return passWord;
-    }
-
-    public void setPassWord(String passWord) {
-        this.passWord = passWord;
-    }
 }

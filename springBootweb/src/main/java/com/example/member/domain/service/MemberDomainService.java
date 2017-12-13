@@ -7,6 +7,7 @@ import com.example.exception.CPBusinessException;
 import com.example.member.app.dto.LoginDto;
 import com.example.member.app.service.MemberAppService;
 import com.example.member.domain.entity.Member;
+import com.example.member.domain.enums.Sex;
 import com.example.member.domain.repository.MemberRepository;
 import com.example.member.domain.repository.MybatisMapperRepository;
 import com.example.util.DomainService;
@@ -52,7 +53,9 @@ public class MemberDomainService {
     }
 
     public List<Member> findxx(ListRequest<Null> listRequest){
-        return mybatisMapperRepository.findAll(listRequest.getMap(),listRequest.getSort());
+        List<Member> list=mybatisMapperRepository.listMember(Sex.MAN);
+        System.out.println(list);
+        return list;
     }
 
 }

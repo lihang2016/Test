@@ -15,7 +15,7 @@ import javax.persistence.Table;
  */
 
 @Entity
-@Table(name="obs1")
+@Table(name="obs")
 @Getter
 @Setter
 public class Obs extends AggEntity {

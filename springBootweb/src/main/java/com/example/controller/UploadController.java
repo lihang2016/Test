@@ -25,7 +25,7 @@ import static com.example.util.FilesUtil.isPreviewFileType;
  * @Date Create in 15:51 2017/12/13
  */
 @RestController
-//@RequestMapping("/obs")
+@RequestMapping("/obs")
 public class UploadController {
 
     @Autowired

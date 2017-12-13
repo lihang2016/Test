@@ -1,7 +1,7 @@
 
 package com.example.scaneum.util;
 
-import com.example.mybatisMapper.Dates;
+import com.example.util.Dates;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.ArrayUtils;

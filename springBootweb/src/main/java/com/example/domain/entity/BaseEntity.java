@@ -4,6 +4,7 @@ import com.example.common.udc.UDC;
 import com.example.common.udc.UDCUserType;
 import com.example.config.SpringContextHolder;
 import com.example.exception.CPBusinessException;
+import com.example.util.BeanCopier;
 import com.example.util.Copier;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
@@ -43,7 +44,36 @@ public class BaseEntity implements Serializable {
         }
     }
 
+    /**
+     * 从DTO拷贝属性到领域对象
+     * <p>
+     * 拷贝策略为：1.忽略DTO中的null 2. 忽略DTO属性不兼容
+     * </p>
+     * @param dto 传输对象
+     */
+    public void from(Object dto) {
+        BeanCopier.copy(dto, this, BeanCopier.CopyStrategy.IGNORE_NULL, BeanCopier.NoMatchingRule.IGNORE);
+    }
 
+    /**
+     * 从DTO拷贝属性到领域对象
+     * <p>
+     *     拷贝策略为：1.忽略DTO中的null 2. 忽略DTO属性不兼容 3.忽略DTO中的某些属性
+     * </p>
+     * @param dto  传输对象
+     * @param ingoreProperties 忽略拷贝的属性,一般为DTO中的非基本类型的属性,举例:UserDto中包含了DepartmentDto,DepartmentDto 拷贝时需要忽略
+     */
+    public void from(Object dto,String ...ingoreProperties) {
+        BeanCopier.copy(dto, this, BeanCopier.CopyStrategy.IGNORE_NULL, BeanCopier.NoMatchingRule.IGNORE,ingoreProperties);
+    }
+
+    public void fromContainNUll(Object dto) {
+        BeanCopier.copy(dto, this, BeanCopier.CopyStrategy.CONTAIN_NULL, BeanCopier.NoMatchingRule.EXCEPTION);
+    }
+
+    public void fromContainNUll(Object dto,String ...ingoreProperties) {
+        BeanCopier.copy(dto, this, BeanCopier.CopyStrategy.CONTAIN_NULL, BeanCopier.NoMatchingRule.EXCEPTION,ingoreProperties);
+    }
     /**
      * 把实体对象list转换为目标对象List
      */

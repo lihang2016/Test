@@ -1,10 +1,6 @@
 package com.example.springMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.PageRequest;
@@ -27,9 +23,9 @@ import static org.springframework.beans.support.PagedListHolder.DEFAULT_PAGE_SIZ
  * @Date 2017/10/29 16:07
  */
 @Configuration
-public class PageRequestConfig extends WebMvcConfigurerAdapter {
+public class ConverterConfig extends WebMvcConfigurerAdapter {
 	/**
-	 * 配置pageRequest
+	 * 配置pageRequest,ListRequest
 	 * @param argumentResolvers
 	 */
     @Override
@@ -37,6 +33,7 @@ public class PageRequestConfig extends WebMvcConfigurerAdapter {
 		super.addArgumentResolvers(argumentResolvers);
 		argumentResolvers.add(pageableHandlerMethodArgumentResolver());
 		argumentResolvers.add(pageRequestArgumentResolver());
+		argumentResolvers.add(listRequestConverter());
 	}
 
 	/**
@@ -54,7 +51,6 @@ public class PageRequestConfig extends WebMvcConfigurerAdapter {
 				objectMapper.setTimeZone(TimeZone.getTimeZone("GMT+8")); //解决jackson 使用国际标准时间GMT进行格式化,导致和国内时区相差8小时的bug
 			}
 		}
-		//	super.configureMessageConverters(converters);
 	}
 
 	@Bean
@@ -67,8 +63,14 @@ public class PageRequestConfig extends WebMvcConfigurerAdapter {
 	}
 
 	@Bean
-	public PageResquestConverter pageRequestArgumentResolver() {
-		return new PageResquestConverter();
+	public PageRequestConverter pageRequestArgumentResolver() {
+		return new PageRequestConverter();
+	}
+
+
+	@Bean
+	public ListRequestConverter listRequestConverter(){
+		return new ListRequestConverter();
 	}
 	@Bean
 	public SortHandlerMethodArgumentResolver sortHandlerMethodArgumentResolver() {

@@ -13,6 +13,9 @@ import com.example.member.domain.repository.MybatisMapperRepository;
 import com.example.util.DomainService;
 import com.example.util.event.EventBus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import java.util.List;
 /**
@@ -24,8 +27,6 @@ public class MemberDomainService {
 
     @Autowired
     private MemberRepository memberRepository;
-
-
 
     @Autowired
     private MemberAppService memberAppService;
@@ -53,9 +54,13 @@ public class MemberDomainService {
     }
 
     public List<Member> findxx(ListRequest<Null> listRequest){
-        List<Member> list=mybatisMapperRepository.listMember(Sex.MAN);
+        List<Member> list=mybatisMapperRepository.findAll(listRequest.getMap(),listRequest.getSort());
         System.out.println(list);
         return list;
     }
 
+    @Cacheable(value = "Member",key = "#id")
+    public Member findByRedis(Long id){
+       return mybatisMapperRepository.get(id);
+    }
 }

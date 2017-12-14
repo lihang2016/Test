@@ -21,7 +21,7 @@ import java.util.*;
  * @Date 2017/10/28 13:01
  */
 @Component
-public class PageResquestConverter extends AbstractArgumentResolver {
+public class PageRequestConverter extends AbstractArgumentResolver {
 
     @Autowired
     private PageableHandlerMethodArgumentResolver pageableHandlerMethodArgumentResolver;

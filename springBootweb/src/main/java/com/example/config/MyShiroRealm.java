@@ -12,6 +12,7 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 
@@ -29,6 +30,7 @@ import static org.apache.shiro.web.filter.mgt.DefaultFilter.user;
 public class MyShiroRealm extends AuthorizingRealm {
 
     @Autowired
+    @Lazy
     private MemberAppService memberAppService;
     @Autowired
     StringRedisTemplate stringRedisTemplate;
@@ -38,8 +40,10 @@ public class MyShiroRealm extends AuthorizingRealm {
 
     //用户登录是否被锁定    一小时 redisKey 前缀
     private String SHIRO_IS_LOCK = "lock_";
+
     /**
      * 认证信息.(身份验证) : Authentication 是用来验证用户身份
+     *
      * @param authenticationToken
      * @return
      * @throws AuthenticationException
@@ -48,27 +52,27 @@ public class MyShiroRealm extends AuthorizingRealm {
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
         String name = token.getUsername();//账号
-        String password =String.valueOf(token.getPassword());//密码
+        String password = String.valueOf(token.getPassword());//密码
         //访问一次，计数一次
         ValueOperations<String, String> opsForValue = stringRedisTemplate.opsForValue();
-        opsForValue.increment(SHIRO_LOGIN_COUNT+name, 1);
+        opsForValue.increment(SHIRO_LOGIN_COUNT + name, 1);
         //计数大于5时，设置用户被锁定一小时
-        if(Integer.parseInt(opsForValue.get(SHIRO_LOGIN_COUNT+name))>=5){
-            opsForValue.set(SHIRO_IS_LOCK+name, "LOCK");
-            stringRedisTemplate.expire(SHIRO_IS_LOCK+name, 1, TimeUnit.HOURS);
+        if (Integer.parseInt(opsForValue.get(SHIRO_LOGIN_COUNT + name)) >= 5) {
+            opsForValue.set(SHIRO_IS_LOCK + name, "LOCK");
+            stringRedisTemplate.expire(SHIRO_IS_LOCK + name, 1, TimeUnit.HOURS);
         }
-        if ("LOCK".equals(opsForValue.get(SHIRO_IS_LOCK+name))){
-        CPBusinessException.throwIt("账号已被锁定");
+        if ("LOCK".equals(opsForValue.get(SHIRO_IS_LOCK + name))) {
+            CPBusinessException.throwIt("账号已被锁定");
         }
-        LoginDto loginDto=new LoginDto();
-        String pwd= MyDES.encryptBasedDes(name+password);
+        LoginDto loginDto = new LoginDto();
+        String pwd = MyDES.encryptBasedDes(name + password);
         loginDto.setPhone(name);
         loginDto.setPassword(pwd);
-        MemberDto memberDto=memberAppService.findByPhoneAndPassword(loginDto).getData();
+        MemberDto memberDto = memberAppService.findByPhoneAndPassword(loginDto).getData();
         System.out.println("身份认证方法：MyShiroRealm.doGetAuthenticationInfo()");
         //清空登录计数
-        opsForValue.set(SHIRO_LOGIN_COUNT+name, "0");
-        System.out.println(SecurityUtils.getSubject().isAuthenticated()+"第一次"+"名字是:"+getName());
+        opsForValue.set(SHIRO_LOGIN_COUNT + name, "0");
+        System.out.println(SecurityUtils.getSubject().isAuthenticated() + "第一次" + "名字是:" + getName());
         return new SimpleAuthenticationInfo(memberDto, password, getName());
     }
 
@@ -79,10 +83,10 @@ public class MyShiroRealm extends AuthorizingRealm {
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         System.out.println("权限认证方法：MyShiroRealm.doGetAuthorizationInfo()");
         MemberDto memberDto = (MemberDto) SecurityUtils.getSubject().getPrincipal();
-        System.out.println("权限认证方法：MyShiroRealm.doGetAuthorizationInfo()"+user);
-        SimpleAuthorizationInfo info =  new SimpleAuthorizationInfo();
+        System.out.println("权限认证方法：MyShiroRealm.doGetAuthorizationInfo()" + user);
+        SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
         //根据用户ID查询角色（role），放入到Authorization里。
-		/*Map<String, Object> map = new HashMap<String, Object>();
+        /*Map<String, Object> map = new HashMap<String, Object>();
 		map.put("user_id", userId);
 		List<SysRole> roleList = sysRoleService.selectByMap(map);
 		Set<String> roleSet = new HashSet<String>();
@@ -106,7 +110,7 @@ public class MyShiroRealm extends AuthorizingRealm {
     }
 
     public static void main(String[] args) {
-        String pwd= MyDES.decryptBasedDes("wHNl8QxdXaJoBb00hI555SM5Poa+tEpd");
+        String pwd = MyDES.decryptBasedDes("wHNl8QxdXaJoBb00hI555SM5Poa+tEpd");
         System.out.println(pwd);
     }
 }

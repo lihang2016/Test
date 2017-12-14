@@ -40,8 +40,6 @@ public class MemberDto implements Serializable{
 
     private String memberType;
 
-    private Date rawAddTime;
-
     public Sex getSex() {
         return sex;
     }
@@ -113,13 +111,5 @@ public class MemberDto implements Serializable{
 
     public void setMemberType(String memberType) {
         this.memberType = memberType;
-    }
-
-    public Date getRawAddTime() {
-        return rawAddTime;
-    }
-
-    public void setRawAddTime(Date rawAddTime) {
-        this.rawAddTime = rawAddTime;
     }
 }

@@ -3,9 +3,6 @@ package com.example.config;
 
 import ch.qos.logback.classic.pattern.DateConverter;
 import com.alibaba.fastjson.parser.ParserConfig;
-import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.alibaba.fastjson.support.config.FastJsonConfig;
-import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.example.common.udc.StringToUDCConverter;
 import com.example.common.udc.UDC;
 import com.example.common.udc.UDCDeserializer;
@@ -13,8 +10,6 @@ import com.example.mybatisMapper.pages.PageObjectFactory;
 import com.example.mybatisMapper.pages.PageObjectWrapperFactory;
 import com.example.mybatisMapper.pages.PageableExecutorInterceptor;
 import com.example.scaneum.listener.MeataApplicationReadyListener;
-import com.example.springMvc.CustomSortHandlerMethodArgumentResolver;
-import com.example.springMvc.PageResquestConverter;
 import com.example.util.event.EventBus;
 import com.example.util.event.EventHandler;
 import com.google.common.base.Splitter;
@@ -23,33 +18,24 @@ import net.engio.mbassy.bus.config.Feature;
 import net.engio.mbassy.bus.config.IBusConfiguration;
 import net.engio.mbassy.bus.error.IPublicationErrorHandler;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
-import org.springframework.boot.autoconfigure.web.HttpMessageConverters;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ClassPathBeanDefinitionScanner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.type.filter.AssignableTypeFilter;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
-import org.springframework.data.web.SortHandlerMethodArgumentResolver;
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.data.redis.cache.RedisCacheManager;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.MultipartConfigElement;
-import java.util.ArrayList;
 import java.util.List;
-
-import static org.springframework.beans.support.PagedListHolder.DEFAULT_PAGE_SIZE;
 
 /**
  *配置事件类
@@ -171,7 +157,6 @@ public class CommonConfigration {
     public MeataApplicationReadyListener meataApplicationReadyListener(){
         return new MeataApplicationReadyListener();
     }
-
 
 
     @PostConstruct

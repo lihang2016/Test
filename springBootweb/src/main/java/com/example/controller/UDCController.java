@@ -28,6 +28,6 @@ public class UDCController {
     public ViewInfo findUDC(@RequestParam("typeCode")String typeCode){
 
         SingleResponse<List<UDCItemDto>> list=udcTypeAppService.findByTypeCode(typeCode);
-      return  list.convertTo();
+      return  list.to();
     }
 }

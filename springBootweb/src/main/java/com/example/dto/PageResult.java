@@ -33,6 +33,6 @@ public class PageResult<T> extends CPResponse {
     }
 
     public ViewInfo to() {
-        return super.convertTo().data(this.data);
+        return super.to().data(this.data);
     }
 }

@@ -45,6 +45,6 @@ public class ListResult<T> extends CPResponse {
     }
 
     public ViewInfo to() {
-        return super.convertTo().data(data);
+        return super.to().data(data);
     }
 }

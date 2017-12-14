@@ -57,6 +57,12 @@ public class MemberController {
         return memberAppService.findByxxx(listRequest).to();
     }
 
+
+    @RequestMapping(value = "/testRedis",method = RequestMethod.GET)
+    public ViewInfo testRedis(Long id){
+        return memberAppService.findByRedis(id).to();
+    }
+
     @RequestMapping(value = "/front/testfront.json")
     public String testFront(){
         return "前台";

@@ -29,7 +29,7 @@ public class Member extends AggEntity {
     @Column(name="hehe",columnDefinition = "varchar(40) comment 'testUDC'")
     private UDC hehe;
 
-    @Column(name="idCard",columnDefinition = "varchar(20) comment '身份证号'")
+    @Column(name="id_card",columnDefinition = "varchar(20) comment '身份证号'")
     private String idCard;
 
     @Column(name="phone",columnDefinition = "varchar(15) comment '手机号码'")

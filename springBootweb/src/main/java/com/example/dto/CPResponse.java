@@ -21,7 +21,7 @@ public class CPResponse{
     /**
      * 把当前对象转换为ViewInfo对象
      */
-    public ViewInfo convertTo() {
+    public ViewInfo to() {
         return ViewInfo.from(this);
     }
 

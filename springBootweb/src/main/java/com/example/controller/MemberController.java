@@ -63,6 +63,11 @@ public class MemberController {
         return memberAppService.findByRedis(id).to();
     }
 
+    @RequestMapping(value = "/findByClear",method = RequestMethod.GET)
+    public ViewInfo findByClear(LoginDto loginDto){
+        return memberAppService.findByClear(loginDto).to();
+    }
+
     @RequestMapping(value = "/front/testfront.json")
     public String testFront(){
         return "前台";

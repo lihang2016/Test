@@ -1,6 +1,10 @@
 package com.example.config.redis;
 
 import com.example.config.CacheKeyGenerator;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.shiro.cache.AbstractCacheManager;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
@@ -11,8 +15,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-
-import java.lang.reflect.Method;
 import java.net.UnknownHostException;
 
 /**
@@ -25,8 +27,20 @@ public class RedisConfig extends CachingConfigurerSupport {
 
     @Value("${spring.redis.expire}")
     private Long expire;
+//    @Value("${cache.guavaCache.hotelPosition.maxSize}")
+//    private long hotelPositionMaxSize;
+//    @Value("${cache.guavaCache.hotelPosition.duration}")
+//    private long hotelPositionDuration;
 
-
+    //使用内置缓存
+//    private GuavaCache buildHotelPositionCache() {
+//        return new GuavaCache("hotel_position",
+//                CacheBuilder.newBuilder()
+//                        .recordStats()
+//                        .maximumSize(11)
+//                        .expireAfterWrite(100, TimeUnit.DAYS)
+//                        .build());
+//    }
     @Bean
     public RedisTemplate redisTemplate(RedisConnectionFactory redisConnectionFactory) throws UnknownHostException {
         RedisTemplate<Object, Object> template = new RedisTemplate<>();
@@ -34,15 +48,12 @@ public class RedisConfig extends CachingConfigurerSupport {
         template.setKeySerializer(new DefaultKeySerializer());
         return template;
     }
-//
+    @SuppressWarnings("rawtypes")
     @Bean
-    public CacheManager cacheManager(RedisTemplate<?,?> redisTemplate) {
-        RedisCacheManager cacheManager = new RedisCacheManager(redisTemplate);
-//        cacheManager.setDefaultExpiration(expire);
-        return cacheManager;
-    }
-    @Bean
-    public KeyGenerator keyGenerator() {
-        return new CacheKeyGenerator();
+    public CacheManager cacheManager(RedisTemplate redisTemplate) {
+        RedisCacheManager rcm = new RedisCacheManager(redisTemplate);
+        //设置缓存过期时间
+        rcm.setDefaultExpiration(expire);//秒
+        return rcm;
     }
 }

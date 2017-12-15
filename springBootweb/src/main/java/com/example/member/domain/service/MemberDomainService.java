@@ -14,6 +14,7 @@ import com.example.util.DomainService;
 import com.example.util.event.EventBus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -41,6 +42,7 @@ public class MemberDomainService {
      * @param loginDto
      * @return
      */
+
     public Member findByPhoneAndPassword(LoginDto loginDto){
         Member member=memberRepository.findByPhoneAndPassWord(loginDto.getPhone(),loginDto.getPassword());
         if(member==null){
@@ -59,8 +61,13 @@ public class MemberDomainService {
         return list;
     }
 
-    @Cacheable(value = "Member",key = "#id")
+    @Cacheable(value = "member",key = "caches[0].name+'_'+#id")
     public Member findByRedis(Long id){
        return mybatisMapperRepository.get(id);
+    }
+
+    @CacheEvict(value="member",key = "caches[0].name+'_'+#loginDto.id")
+    public void findByClear(LoginDto loginDto){
+        System.out.println("aaaaa");
     }
 }

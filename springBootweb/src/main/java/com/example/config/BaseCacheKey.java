@@ -1,6 +1,7 @@
 package com.example.config;
 
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;

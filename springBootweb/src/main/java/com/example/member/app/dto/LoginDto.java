@@ -19,6 +19,8 @@ import javax.validation.constraints.Null;
 @Setter
 public class LoginDto extends BaseDto {
 
+    private String id;
+
     private String phone;
 
     private String password;

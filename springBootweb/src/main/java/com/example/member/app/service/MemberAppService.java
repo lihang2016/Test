@@ -41,4 +41,9 @@ public class MemberAppService {
     public SingleResponse<MemberDto> findByRedis(Long id){
         return SingleResponse.from(memberDomainService.findByRedis(id), MemberDto.class);
     }
+
+    public CPResponse findByClear(LoginDto loginDto){
+            memberDomainService.findByClear(loginDto);
+        return new CPResponse();
+    }
 }

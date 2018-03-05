@@ -40,6 +40,7 @@ public class MemberDto implements Serializable{
 
     private String memberType;
 
+
     public Sex getSex() {
         return sex;
     }

@@ -1,5 +1,5 @@
 
-package com.example.util;
+package com.example.springMvc;
 
 import java.util.HashMap;
 import java.util.Map;

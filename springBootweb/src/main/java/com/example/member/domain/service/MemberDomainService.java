@@ -56,7 +56,7 @@ public class MemberDomainService {
     }
 
     public List<Member> findxx(ListRequest<Null> listRequest){
-        List<Member> list=mybatisMapperRepository.findAll(listRequest.getMap(),listRequest.getSort());
+        List<Member> list=mybatisMapperRepository.listMember(Sex.MAN);
         System.out.println(list);
         return list;
     }

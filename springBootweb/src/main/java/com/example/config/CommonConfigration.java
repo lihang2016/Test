@@ -13,11 +13,14 @@ import com.example.scaneum.listener.MeataApplicationReadyListener;
 import com.example.util.event.EventBus;
 import com.example.util.event.EventHandler;
 import com.google.common.base.Splitter;
+import com.google.common.collect.Maps;
 import net.engio.mbassy.bus.config.BusConfiguration;
 import net.engio.mbassy.bus.config.Feature;
 import net.engio.mbassy.bus.config.IBusConfiguration;
 import net.engio.mbassy.bus.error.IPublicationErrorHandler;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.mybatis.spring.SqlSessionFactoryBean;
+import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
@@ -36,6 +39,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import javax.annotation.PostConstruct;
 import javax.servlet.MultipartConfigElement;
 import java.util.List;
+import java.util.Map;
 
 /**
  *配置事件类
@@ -145,8 +149,21 @@ public class CommonConfigration {
             sqlSessionFactory.getConfiguration().setObjectWrapperFactory(new PageObjectWrapperFactory());
             sqlSessionFactory.getConfiguration().setUseGeneratedKeys(true);
 //            sqlSessionFactory.getConfiguration().addInterceptor(optimisticLocker);
+            customConfig(sqlSessionFactory.getConfiguration());
         }
     }
+    private void customConfig(	org.apache.ibatis.session.Configuration configuration) {
+            BeanWrapperImpl wrapper = new BeanWrapperImpl(configuration);
+        Map<String, String> settings= Maps.newHashMap();
+        settings.put("mapUnderscoreToCamelCase", Boolean.TRUE.toString());
+        settings.entrySet().stream()
+                .forEach(entry -> wrapper.setPropertyValue(entry.getKey(), entry.getValue()));
+        configuration.setObjectFactory(new PageObjectFactory());
+        configuration.setObjectWrapperFactory(new PageObjectWrapperFactory());
+        //处理insert之后返回id问题
+        configuration.setUseGeneratedKeys(true);
+    }
+
     @Bean
     public DateConverter dateConverter() {
         return new DateConverter();

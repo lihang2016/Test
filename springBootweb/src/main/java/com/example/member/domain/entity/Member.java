@@ -5,6 +5,7 @@ import com.example.domain.entity.AggEntity;
 import com.example.member.domain.enums.Sex;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -49,5 +50,14 @@ public class Member extends AggEntity {
 
     @Column(name="member_type",columnDefinition = "varchar(15) comment '会员类型'")
     private String memberType;
+
+    @Transient
+    public transient MemberMeal memberMeal;
+
+    public MemberMeal getMemberMeal(){
+        MemberMeal memberMeal=new MemberMeal();
+        memberMeal.setId(111L);
+        return memberMeal;
+    }
 
 }
